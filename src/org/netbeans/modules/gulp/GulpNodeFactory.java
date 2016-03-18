@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JOptionPane;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
@@ -18,7 +17,6 @@ import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.netbeans.spi.project.ui.support.NodeList;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.BeanNode;
@@ -30,27 +28,35 @@ import org.openide.util.ImageUtilities;
 
 @NodeFactory.Registration(position = 5000, projectType = "org-netbeans-modules-web-clientproject")
 public class GulpNodeFactory implements NodeFactory {
-
-    private Project owner;
+    private Project project;
 
     @Override
     public NodeList<?> createNodes(Project prjct) {
-        this.owner = prjct;
+        this.project = prjct;
+
         try {
-            DataObject dobj = DataObject.find(prjct.getProjectDirectory().getFileObject("gulpfile.js"));
-            GulpfileNode nd = new GulpfileNode(dobj);
-            return NodeFactorySupport.fixedNodeList(nd);
+            final FileObject fileObject = prjct.getProjectDirectory().getFileObject("gulpfile.js");
+
+            if (fileObject != null) {
+                 DataObject dobj = DataObject.find(fileObject);
+            
+                if (dobj != null) {
+                    GulpfileNode nd = new GulpfileNode(dobj);
+
+                    return NodeFactorySupport.fixedNodeList(nd);
+                }
+            }
         } catch (DataObjectNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         }
+
         return NodeFactorySupport.fixedNodeList();
     }
 
     public class GulpfileNode extends FilterNode {
 
         @StaticResource
-        private static final String IMAGE = "org/netbeans/modules/"
-                + "gulp/gulp.png";
+        private static final String IMAGE = "org/netbeans/modules/gulp/gulp.png";
 
         public GulpfileNode(DataObject dobj) throws DataObjectNotFoundException {
             super(dobj.getNodeDelegate(), Children.create(new GulpTaskChildFactory(dobj), true));
@@ -58,7 +64,7 @@ public class GulpNodeFactory implements NodeFactory {
 
         @Override
         public String getDisplayName() {
-            return "Gulp";
+            return "Gulp Tasks";
         }
 
         @Override
@@ -70,11 +76,9 @@ public class GulpNodeFactory implements NodeFactory {
         public Image getOpenedIcon(int type) {
             return ImageUtilities.loadImage(IMAGE);
         }
-
     }
 
     private class GulpTaskChildFactory extends ChildFactory<String> {
-
         private final DataObject dobj;
 
         private GulpTaskChildFactory(DataObject dobj) {
@@ -89,12 +93,13 @@ public class GulpNodeFactory implements NodeFactory {
                 for (String line : lines) {
                     if (line.startsWith("gulp.task")) {
                         int index = line.indexOf(",");
-                        list.add(line.substring(0, index - 1).replace("('", " -- "));
+                        list.add(line.substring(0, index - 1).replace("gulp.task('", ""));
                     }
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
+
             return true;
         }
 
@@ -113,7 +118,7 @@ public class GulpNodeFactory implements NodeFactory {
                                         //                                        addArgument("run").
                                         //                                        addArgument("-m").
                                         //                                        addArgument(namespaceName + "/" + methodName).
-                                        workingDirectory(FileUtil.toFile(owner.getProjectDirectory()));
+                                        workingDirectory(FileUtil.toFile(project.getProjectDirectory()));
                                 ExecutionDescriptor descriptor = new ExecutionDescriptor().
                                         frontWindow(true).
                                         showProgress(true).
@@ -128,13 +133,13 @@ public class GulpNodeFactory implements NodeFactory {
                         }};
                     }
                 };
+
                 node.setDisplayName(key);
             } catch (IntrospectionException ex) {
                 Exceptions.printStackTrace(ex);
             }
+
             return node;
         }
-
     }
-
 }
