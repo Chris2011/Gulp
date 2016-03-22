@@ -1,12 +1,11 @@
-# Gulp
-Support for Gulp in NetBeans IDE
+<h1>NbTasks</h1>
+<p>
+    Support for Tasks like Gulp, Grunt and NPM Scripts as nodes in NetBeans IDE
+</p>
 
 <ul>
-<li>Parse gulpfile.js and display targets.</li>
-<li>Right-click and choose Run.</li>
-<li>Maybe register Gulp in Options window? Or detect automatically?</li>
+    <li>Parse gulpfile.js and display targets.</li>
+    <li>Read grunt tasks and display targets.</li>
+    <li>Read npm scripts and display targets.</li>
+    <li>Right-click and choose Run.</li>
 </ul>
-
-<h3>Gulp is Already in NetBeans:</h3>
-
-http://wiki.netbeans.org/NewAndNoteworthyNB81
