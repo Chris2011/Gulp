@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="org.netbeans.modules.gulp-impl" basedir="..">
+<project name="org.netbeans.modules.nbtasks-impl" basedir="..">
     <fail message="Please build using Ant 1.7.1 or higher.">
         <condition>
             <not>
