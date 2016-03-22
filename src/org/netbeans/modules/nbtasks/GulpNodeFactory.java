@@ -1,4 +1,4 @@
-package org.netbeans.modules.gulp;
+package org.netbeans.modules.nbtasks;
 
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -56,7 +56,7 @@ public class GulpNodeFactory implements NodeFactory {
     public class GulpfileNode extends FilterNode {
 
         @StaticResource
-        private static final String IMAGE = "org/netbeans/modules/gulp/gulp.png";
+        private static final String IMAGE = "org/netbeans/modules/nbtasks/resources/gulp.png";
 
         public GulpfileNode(DataObject dobj) throws DataObjectNotFoundException {
             super(dobj.getNodeDelegate(), Children.create(new GulpTaskChildFactory(dobj), true));
