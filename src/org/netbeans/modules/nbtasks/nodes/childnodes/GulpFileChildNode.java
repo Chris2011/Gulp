@@ -4,7 +4,6 @@ import java.awt.Image;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.nbtasks.nodefactories.gulp.GulpTaskChildNodeFactory;
 import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.FilterNode;
 import org.openide.util.ImageUtilities;
 
@@ -17,7 +16,7 @@ public class GulpFileChildNode extends FilterNode {
     @StaticResource
     private static final String IMAGE = "org/netbeans/modules/nbtasks/resources/gulp.png";
 
-    public GulpFileChildNode(DataObject dobj) throws DataObjectNotFoundException {
+    public GulpFileChildNode(DataObject dobj) {
         super(dobj.getNodeDelegate(), Children.create(new GulpTaskChildNodeFactory(dobj), true));
     }
 

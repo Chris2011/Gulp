@@ -2,6 +2,7 @@ package org.netbeans.modules.nbtasks.nodefactories.root;
 
 import java.beans.IntrospectionException;
 import java.util.List;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.nbtasks.nodes.childnodes.GulpFileChildNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
@@ -9,16 +10,17 @@ import org.openide.util.Exceptions;
 import org.netbeans.modules.nbtasks.nodes.childnodes.NbTasksChildNode;
 import org.netbeans.modules.nbtasks.nodes.childnodes.NpmScriptsChildNode;
 import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 
 /**
  *
  * @author chrl
  */
-public class NbTasksChildFactory extends ChildFactory<String> {
-    private DataObject _dobj;
+public class NbTasksRootChildFactory extends ChildFactory<String> {
+    private Project _project = null;
 
-    public NbTasksChildFactory(DataObject dobj) {
-        this._dobj = dobj;
+    public NbTasksRootChildFactory(Project project) {
+        this._project = project;
     }
 
     @Override
@@ -26,10 +28,15 @@ public class NbTasksChildFactory extends ChildFactory<String> {
         GulpFileChildNode gulp;
         NpmScriptsChildNode npm;
         
-        gulp = new GulpFileChildNode(_dobj);
-        npm = new NpmScriptsChildNode(_dobj);
-        list.add(gulp.getDisplayName());
-        list.add(npm.getDisplayName());
+        try {
+            gulp = new GulpFileChildNode(DataObject.find(this._project.getProjectDirectory()));
+            npm = new NpmScriptsChildNode(DataObject.find(this._project.getProjectDirectory()));
+            
+            list.add(gulp.getDisplayName());
+            list.add(npm.getDisplayName());
+        } catch (DataObjectNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        }
 
         return true;
     }
@@ -39,8 +46,8 @@ public class NbTasksChildFactory extends ChildFactory<String> {
         NbTasksChildNode node = null;
 
         try {
-            node = new NbTasksChildNode(_dobj);
-        } catch (IntrospectionException ex) {
+            node = new NbTasksChildNode(DataObject.find(this._project.getProjectDirectory()));
+        } catch (IntrospectionException | DataObjectNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         }
 

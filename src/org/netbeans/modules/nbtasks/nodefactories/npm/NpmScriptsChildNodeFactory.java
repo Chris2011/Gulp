@@ -1,7 +1,7 @@
-package org.netbeans.modules.nbtasks.nodefactories.gulp;
+package org.netbeans.modules.nbtasks.nodefactories.npm;
 
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.nbtasks.nodes.childnodes.GulpFileChildNode;
+import org.netbeans.modules.nbtasks.nodes.childnodes.NpmScriptsChildNode;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.netbeans.spi.project.ui.support.NodeList;
@@ -10,8 +10,14 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
 
-public class GulpNodeFactory implements NodeFactory {
+//@NodeFactory.Registration(position = 5000, projectType = "org-netbeans-modules-web-clientproject")
+public class NpmScriptsChildNodeFactory implements NodeFactory {
     private Project project;
+    private final DataObject dobj;
+    
+    private NpmScriptsChildNodeFactory(DataObject dobj) {
+        this.dobj = dobj;
+    }
 
     @Override
     public NodeList<?> createNodes(Project prjct) {
@@ -24,7 +30,7 @@ public class GulpNodeFactory implements NodeFactory {
                  DataObject dobj = DataObject.find(fileObject);
             
                 if (dobj != null) {
-                    GulpFileChildNode nd = new GulpFileChildNode(dobj);
+                    NpmScriptsChildNode nd = new NpmScriptsChildNode(dobj);
 
                     return NodeFactorySupport.fixedNodeList(nd);
                 }

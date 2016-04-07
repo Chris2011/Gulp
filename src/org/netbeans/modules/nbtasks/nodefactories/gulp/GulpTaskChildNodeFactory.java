@@ -22,10 +22,9 @@ import org.openide.util.Exceptions;
  * @author chrl
  */
 public class GulpTaskChildNodeFactory extends ChildFactory<String> {
-
     private final DataObject dobj;
 
-    GulpTaskChildNodeFactory(DataObject dobj) {
+    public GulpTaskChildNodeFactory(DataObject dobj) {
         this.dobj = dobj;
     }
 
