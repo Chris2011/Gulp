@@ -17,7 +17,7 @@ import org.openide.util.ImageUtilities;
         private static final String IMAGE = "org/netbeans/modules/nbtasks/resources/npm.png";
 
         public NpmScriptsChildNode(DataObject dobj) {
-            super(dobj.getNodeDelegate(), FilterNode.Children.create(new NpmScriptsChildNodeFactory(dobj), true));
+            super(dobj.getNodeDelegate(), Children.create(new NpmScriptsChildNodeFactory(dobj), true));
         }
 
         @Override

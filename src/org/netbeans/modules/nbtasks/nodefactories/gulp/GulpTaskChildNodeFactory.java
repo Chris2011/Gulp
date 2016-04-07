@@ -61,7 +61,7 @@ public class GulpTaskChildNodeFactory extends ChildFactory<String> {
                                     //                                        addArgument("run").
                                     //                                        addArgument("-m").
                                     //                                        addArgument(namespaceName + "/" + methodName).
-                                    workingDirectory(FileUtil.toFile(project.getProjectDirectory()));
+                                    workingDirectory(FileUtil.toFile(dobj.getPrimaryFile()));
                             ExecutionDescriptor descriptor = new ExecutionDescriptor().
                                     frontWindow(true).
                                     showProgress(true).

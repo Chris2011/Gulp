@@ -1,44 +1,87 @@
 package org.netbeans.modules.nbtasks.nodefactories.npm;
 
-import org.netbeans.api.project.Project;
-import org.netbeans.modules.nbtasks.nodes.childnodes.NpmScriptsChildNode;
-import org.netbeans.spi.project.ui.support.NodeFactory;
-import org.netbeans.spi.project.ui.support.NodeFactorySupport;
-import org.netbeans.spi.project.ui.support.NodeList;
+import java.awt.event.ActionEvent;
+import java.beans.IntrospectionException;
+import java.io.IOException;
+import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import org.netbeans.api.extexecution.ExecutionDescriptor;
+import org.netbeans.api.extexecution.ExecutionService;
+import org.netbeans.api.extexecution.ExternalProcessBuilder;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.nodes.BeanNode;
+import org.openide.nodes.ChildFactory;
+import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 
-//@NodeFactory.Registration(position = 5000, projectType = "org-netbeans-modules-web-clientproject")
-public class NpmScriptsChildNodeFactory implements NodeFactory {
-    private Project project;
+/**
+ *
+ * @author chrl
+ */
+public class NpmScriptsChildNodeFactory extends ChildFactory<String> {
     private final DataObject dobj;
-    
-    private NpmScriptsChildNodeFactory(DataObject dobj) {
+
+    public NpmScriptsChildNodeFactory(DataObject dobj) {
         this.dobj = dobj;
     }
 
     @Override
-    public NodeList<?> createNodes(Project prjct) {
-        this.project = prjct;
-
+    protected boolean createKeys(List<String> list) {
+        FileObject fo = dobj.getPrimaryFile();
         try {
-            final FileObject fileObject = prjct.getProjectDirectory().getFileObject("gulpfile.js");
-
-            if (fileObject != null) {
-                 DataObject dobj = DataObject.find(fileObject);
-            
-                if (dobj != null) {
-                    NpmScriptsChildNode nd = new NpmScriptsChildNode(dobj);
-
-                    return NodeFactorySupport.fixedNodeList(nd);
+            List<String> lines = fo.asLines();
+            for (String line : lines) {
+                if (line.startsWith("gulp.task")) {
+                    int index = line.indexOf(",");
+                    list.add(line.substring(0, index - 1).replace("gulp.task('", ""));
                 }
             }
-        } catch (DataObjectNotFoundException ex) {
+        } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
 
-        return NodeFactorySupport.fixedNodeList();
+        return true;
+    }
+
+    @Override
+    protected Node createNodeForKey(final String key) {
+        BeanNode node = null;
+        try {
+            node = new BeanNode(key) {
+                @Override
+                public Action[] getActions(boolean context) {
+                    return new Action[]{new AbstractAction("Run") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+
+                            ExternalProcessBuilder processBuilder = new ExternalProcessBuilder("gulp").
+                                    //                                        addArgument("run").
+                                    //                                        addArgument("-m").
+                                    //                                        addArgument(namespaceName + "/" + methodName).
+                                    workingDirectory(FileUtil.toFile(dobj.getPrimaryFile()));
+                            ExecutionDescriptor descriptor = new ExecutionDescriptor().
+                                    frontWindow(true).
+                                    showProgress(true).
+                                    controllable(true);
+                            ExecutionService service = ExecutionService.newService(
+                                    processBuilder,
+                                    descriptor,
+                                    key);
+                            service.run();
+
+                        }
+                    }};
+                }
+            };
+
+            node.setDisplayName(key);
+        } catch (IntrospectionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return node;
     }
 }
