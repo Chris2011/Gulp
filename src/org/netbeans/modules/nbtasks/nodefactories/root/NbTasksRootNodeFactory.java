@@ -1,5 +1,6 @@
-package org.netbeans.modules.nbtasks;
+package org.netbeans.modules.nbtasks.nodefactories.root;
 
+import org.netbeans.modules.nbtasks.nodes.NbTasksRootNode;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
@@ -21,7 +22,7 @@ import org.openide.nodes.Node;
     "org-netbeans-modules-web-project",
     "org.netbeans.modules.web.clientproject"
 }, position = 10000)
-public class NbTasksNodeFactory implements NodeFactory {
+public class NbTasksRootNodeFactory implements NodeFactory {
     @Override
     public NodeList<?> createNodes(final Project project) {
         return new TaskNodeList(project);
@@ -39,7 +40,7 @@ public class NbTasksNodeFactory implements NodeFactory {
         public List<Node> keys() {
             List<Node> result = new ArrayList<>();
             
-            result.add(new NbTasksNode(project));
+            result.add(new NbTasksRootNode(project));
 
             return result;
         }
