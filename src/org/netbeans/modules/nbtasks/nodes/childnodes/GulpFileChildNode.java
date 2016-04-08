@@ -11,7 +11,7 @@ import org.openide.util.ImageUtilities;
  *
  * @author chrl
  */
-public class GulpFileChildNode extends FilterNode {
+public class GulpFileChildNode extends FilterNode implements INbTasksNode {
 
     @StaticResource
     private static final String IMAGE = "org/netbeans/modules/nbtasks/resources/gulp.png";

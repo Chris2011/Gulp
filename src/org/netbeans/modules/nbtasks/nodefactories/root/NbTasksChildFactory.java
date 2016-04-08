@@ -1,11 +1,9 @@
 package org.netbeans.modules.nbtasks.nodefactories.root;
 
-import java.beans.IntrospectionException;
 import java.util.List;
 import org.netbeans.modules.nbtasks.nodes.childnodes.GulpFileChildNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.netbeans.modules.nbtasks.nodes.childnodes.NbTasksChildNode;
 import org.netbeans.modules.nbtasks.nodes.childnodes.NpmScriptsChildNode;
 import org.openide.loaders.DataObject;
@@ -38,11 +36,11 @@ public class NbTasksChildFactory extends ChildFactory<String> {
     protected Node createNodeForKey(final String key) {
         NbTasksChildNode node = null;
 
-        try {
-            node = new NbTasksChildNode(_dobj);
-        } catch (IntrospectionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+//        try {
+//            node = new NbTasksChildNode(_dobj);
+//        } catch (IntrospectionException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
 
         return node;
     }

@@ -11,7 +11,7 @@ import org.openide.util.ImageUtilities;
  *
  * @author chrl
  */
-    public class NpmScriptsChildNode extends FilterNode {
+    public class NpmScriptsChildNode extends FilterNode implements INbTasksNode {
 
         @StaticResource
         private static final String IMAGE = "org/netbeans/modules/nbtasks/resources/npm.png";
