@@ -2,7 +2,6 @@ package org.netbeans.modules.nbtasks.nodefactories.root;
 
 import java.beans.IntrospectionException;
 import java.util.List;
-import javax.swing.JOptionPane;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.nbtasks.nodes.childnodes.GulpFileChildNode;
 import org.netbeans.modules.nbtasks.nodes.childnodes.INbTasksNode;
@@ -31,10 +30,14 @@ public class NbTasksRootChildFactory extends ChildFactory<INbTasksNode> {
         NpmScriptsChildNode npm;
         
         try {
-            gulp = new GulpFileChildNode(DataObject.find(this._project.getProjectDirectory()));
+            if (this._project.getProjectDirectory().getFileObject("gulpfile.js") != null) {
+                gulp = new GulpFileChildNode(DataObject.find(this._project.getProjectDirectory()));
+
+                list.add(gulp);
+            }
+            
             npm = new NpmScriptsChildNode(DataObject.find(this._project.getProjectDirectory()));
             
-            list.add(gulp);
             list.add(npm);
         } catch (DataObjectNotFoundException ex) {
             Exceptions.printStackTrace(ex);
