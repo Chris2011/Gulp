@@ -3,7 +3,6 @@ package org.netbeans.modules.nbtasks.nodes.childnodes;
 import java.awt.Image;
 import java.beans.IntrospectionException;
 import org.netbeans.modules.nbtasks.nodefactories.root.NbTasksChildFactory;
-import org.openide.loaders.DataObject;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
 
