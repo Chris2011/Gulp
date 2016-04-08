@@ -41,8 +41,10 @@ public class NpmScriptsChildNodeFactory extends ChildFactory<String> {
             JSONObject jsonObject = (JSONObject)jsonParser.parse(fo.asText());
             JSONObject npmScripts = (JSONObject)jsonObject.get("scripts");
             
-            for (Object npmScript : npmScripts.keySet()) {
-                list.add((String)npmScript);
+            if (npmScripts != null) {
+                for (Object npmScript : npmScripts.keySet()) {
+                    list.add((String)npmScript);
+                }
             }
         } catch (IOException | ParseException ex) {
             Exceptions.printStackTrace(ex);
