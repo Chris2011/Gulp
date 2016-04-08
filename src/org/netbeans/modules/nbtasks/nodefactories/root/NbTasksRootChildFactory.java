@@ -3,6 +3,7 @@ package org.netbeans.modules.nbtasks.nodefactories.root;
 import java.beans.IntrospectionException;
 import java.util.List;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.nbtasks.nodes.childnodes.GruntFileChildNode;
 import org.netbeans.modules.nbtasks.nodes.childnodes.GulpFileChildNode;
 import org.netbeans.modules.nbtasks.nodes.childnodes.INbTasksNode;
 import org.openide.nodes.ChildFactory;
@@ -27,6 +28,7 @@ public class NbTasksRootChildFactory extends ChildFactory<INbTasksNode> {
     @Override
     protected boolean createKeys(List<INbTasksNode> list) {
         GulpFileChildNode gulp;
+        GruntFileChildNode grunt;
         NpmScriptsChildNode npm;
         
         try {
@@ -34,6 +36,12 @@ public class NbTasksRootChildFactory extends ChildFactory<INbTasksNode> {
                 gulp = new GulpFileChildNode(DataObject.find(this._project.getProjectDirectory()));
 
                 list.add(gulp);
+            }
+            
+            if (this._project.getProjectDirectory().getFileObject("Gruntfile.js") != null) {
+                grunt = new GruntFileChildNode(DataObject.find(this._project.getProjectDirectory()));
+
+                list.add(grunt);
             }
             
             npm = new NpmScriptsChildNode(DataObject.find(this._project.getProjectDirectory()));

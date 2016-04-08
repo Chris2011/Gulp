@@ -2,7 +2,7 @@ package org.netbeans.modules.nbtasks.nodes.childnodes;
 
 import java.awt.Image;
 import org.netbeans.api.annotations.common.StaticResource;
-import org.netbeans.modules.nbtasks.nodefactories.npm.NpmScriptsChildNodeFactory;
+import org.netbeans.modules.nbtasks.nodefactories.grunt.GruntTasksChildNodeFactory;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.FilterNode;
@@ -19,9 +19,9 @@ import org.openide.util.ImageUtilities;
         private static final String IMAGE = "org/netbeans/modules/nbtasks/resources/npm.png";
 
         public NpmScriptsChildNode(DataObject dobj) {
-            super(dobj.getNodeDelegate(), Children.create(new NpmScriptsChildNodeFactory(dobj), true));
+            super(dobj.getNodeDelegate(), Children.create(new GruntTasksChildNodeFactory(dobj), true));
             
-            this._childNodeFactory = new NpmScriptsChildNodeFactory(dobj);
+            this._childNodeFactory = new GruntTasksChildNodeFactory(dobj);
         }
 
         @Override
