@@ -2,7 +2,6 @@ package org.netbeans.modules.nbtasks.nodes.childnodes;
 
 import java.awt.Image;
 import java.beans.IntrospectionException;
-import org.netbeans.modules.nbtasks.nodefactories.root.NbTasksChildFactory;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
 
@@ -14,7 +13,7 @@ public class NbTasksChildNode extends BeanNode {
     private final INbTasksNode _nbTasksNode;
     
     public NbTasksChildNode(INbTasksNode nbTasksNode) throws IntrospectionException {
-        super(nbTasksNode, Children.create(new NbTasksChildFactory(null), true));
+        super(nbTasksNode, Children.create(nbTasksNode.getChildNodeFactory(), true));
         
         this._nbTasksNode = nbTasksNode;
     }

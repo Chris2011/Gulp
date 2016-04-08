@@ -9,6 +9,7 @@ import javax.swing.Action;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.ExternalProcessBuilder;
+import org.netbeans.modules.nbtasks.nodes.childnodes.INbTasksChildNodeFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -21,7 +22,7 @@ import org.openide.util.Exceptions;
  *
  * @author chrl
  */
-public class GulpTaskChildNodeFactory extends ChildFactory<String> {
+public class GulpTaskChildNodeFactory extends ChildFactory<String> implements INbTasksChildNodeFactory {
     private final DataObject dobj;
 
     public GulpTaskChildNodeFactory(DataObject dobj) {
@@ -30,7 +31,8 @@ public class GulpTaskChildNodeFactory extends ChildFactory<String> {
 
     @Override
     protected boolean createKeys(List<String> list) {
-        FileObject fo = dobj.getPrimaryFile();
+        FileObject fo = dobj.getPrimaryFile().getFileObject("gulpfile.js");
+
         try {
             List<String> lines = fo.asLines();
             for (String line : lines) {
@@ -83,5 +85,10 @@ public class GulpTaskChildNodeFactory extends ChildFactory<String> {
         }
 
         return node;
+    }
+
+    @Override
+    public INbTasksChildNodeFactory getChildNodeFactory() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
