@@ -3,6 +3,7 @@ package org.netbeans.modules.nbtasks.nodefactories.npm;
 import java.awt.event.ActionEvent;
 import java.beans.IntrospectionException;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -16,6 +17,9 @@ import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -30,16 +34,17 @@ public class NpmScriptsChildNodeFactory extends ChildFactory<String> {
 
     @Override
     protected boolean createKeys(List<String> list) {
-        FileObject fo = dobj.getPrimaryFile();
+        FileObject fo = dobj.getPrimaryFile().getFileObject("package.json");
+        JSONParser jsonParser = new JSONParser();
+
         try {
-            List<String> lines = fo.asLines();
-            for (String line : lines) {
-                if (line.startsWith("gulp.task")) {
-                    int index = line.indexOf(",");
-                    list.add(line.substring(0, index - 1).replace("gulp.task('", ""));
-                }
+            JSONObject jsonObject = (JSONObject)jsonParser.parse(fo.asText());
+            JSONObject npmScripts = (JSONObject)jsonObject.get("scripts");
+            
+            for (Object npmScript : npmScripts.keySet()) {
+                list.add((String)npmScript);
             }
-        } catch (IOException ex) {
+        } catch (IOException | ParseException ex) {
             Exceptions.printStackTrace(ex);
         }
 
@@ -50,32 +55,7 @@ public class NpmScriptsChildNodeFactory extends ChildFactory<String> {
     protected Node createNodeForKey(final String key) {
         BeanNode node = null;
         try {
-            node = new BeanNode(key) {
-                @Override
-                public Action[] getActions(boolean context) {
-                    return new Action[]{new AbstractAction("Run") {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-
-                            ExternalProcessBuilder processBuilder = new ExternalProcessBuilder("gulp").
-                                    //                                        addArgument("run").
-                                    //                                        addArgument("-m").
-                                    //                                        addArgument(namespaceName + "/" + methodName).
-                                    workingDirectory(FileUtil.toFile(dobj.getPrimaryFile()));
-                            ExecutionDescriptor descriptor = new ExecutionDescriptor().
-                                    frontWindow(true).
-                                    showProgress(true).
-                                    controllable(true);
-                            ExecutionService service = ExecutionService.newService(
-                                    processBuilder,
-                                    descriptor,
-                                    key);
-                            service.run();
-
-                        }
-                    }};
-                }
-            };
+            node = new BeanNode(key);
 
             node.setDisplayName(key);
         } catch (IntrospectionException ex) {
