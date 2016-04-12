@@ -11,6 +11,7 @@ import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.netbeans.modules.nbtasks.nodes.childnodes.NbTasksChildNode;
 import org.netbeans.modules.nbtasks.nodes.childnodes.NpmScriptsChildNode;
+import org.netbeans.modules.nbtasks.nodes.childnodes.TypingsChildNode;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 
@@ -30,6 +31,7 @@ public class NbTasksRootChildFactory extends ChildFactory<INbTasksNode> {
         GulpFileChildNode gulp;
         GruntFileChildNode grunt;
         NpmScriptsChildNode npm;
+        TypingsChildNode typings;
         
         try {
             if (this._project.getProjectDirectory().getFileObject("gulpfile.js") != null) {
@@ -43,10 +45,18 @@ public class NbTasksRootChildFactory extends ChildFactory<INbTasksNode> {
 
                 list.add(grunt);
             }
+
+            if (this._project.getProjectDirectory().getFileObject("typings.json") != null) {
+                typings = new TypingsChildNode(DataObject.find(this._project.getProjectDirectory()));
+
+                list.add(typings);
+            }
             
-            npm = new NpmScriptsChildNode(DataObject.find(this._project.getProjectDirectory()));
-            
-            list.add(npm);
+            if (this._project.getProjectDirectory().getFileObject("package.json") != null) {
+                npm = new NpmScriptsChildNode(DataObject.find(this._project.getProjectDirectory()));
+
+                list.add(npm);
+            }
         } catch (DataObjectNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         }

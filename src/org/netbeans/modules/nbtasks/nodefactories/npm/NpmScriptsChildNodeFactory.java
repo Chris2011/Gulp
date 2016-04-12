@@ -1,17 +1,9 @@
 package org.netbeans.modules.nbtasks.nodefactories.npm;
 
-import java.awt.event.ActionEvent;
 import java.beans.IntrospectionException;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import org.netbeans.api.extexecution.ExecutionDescriptor;
-import org.netbeans.api.extexecution.ExecutionService;
-import org.netbeans.api.extexecution.ExternalProcessBuilder;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
