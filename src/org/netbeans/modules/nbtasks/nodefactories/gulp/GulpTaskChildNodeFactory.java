@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JOptionPane;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.ExternalProcessBuilder;
@@ -58,25 +57,28 @@ public class GulpTaskChildNodeFactory extends ChildFactory<String> {
             node = new BeanNode(key) {
                 @Override
                 public Action[] getActions(boolean context) {
-                    return new Action[]{new AbstractAction("Run") {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            String gulpCmd = Utilities.isWindows() ? "gulp.cmd" : "gulp";
-                            
-                            ExternalProcessBuilder processBuilder = new ExternalProcessBuilder(gulpCmd)
-                                    .addArgument(key)
-                                    .workingDirectory(FileUtil.toFile(dobj.getPrimaryFile()));
-                            ExecutionDescriptor descriptor = new ExecutionDescriptor().
-                                    frontWindow(true).
-                                    showProgress(true).
-                                    controllable(true);
-                            ExecutionService service = ExecutionService.newService(
-                                    processBuilder,
-                                    descriptor,
-                                    key);
-                            service.run();
+                    return new Action[] {
+                        new AbstractAction("Run") {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                String gulpCmd = Utilities.isWindows() ? "gulp.cmd" : "gulp";
+
+                                ExternalProcessBuilder processBuilder = new ExternalProcessBuilder(gulpCmd)
+                                        .addArgument(key)
+                                        .workingDirectory(FileUtil.toFile(dobj.getPrimaryFile()));
+                                ExecutionDescriptor descriptor = new ExecutionDescriptor().
+                                        frontWindow(true).
+                                        showProgress(true).
+                                        controllable(true);
+                                ExecutionService service = ExecutionService.newService(
+                                        processBuilder,
+                                        descriptor,
+                                        key);
+
+                                service.run();
+                            }
                         }
-                    }};
+                    };
                 }
             };
 
