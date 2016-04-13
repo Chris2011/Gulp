@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.ExternalProcessBuilder;
@@ -59,12 +60,9 @@ public class GulpTaskChildNodeFactory extends ChildFactory<String> {
                     return new Action[]{new AbstractAction("Run") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-
-                            ExternalProcessBuilder processBuilder = new ExternalProcessBuilder("gulp").
-                                    //                                        addArgument("run").
-                                    //                                        addArgument("-m").
-                                    //                                        addArgument(namespaceName + "/" + methodName).
-                                    workingDirectory(FileUtil.toFile(dobj.getPrimaryFile()));
+                            ExternalProcessBuilder processBuilder = new ExternalProcessBuilder("gulp.cmd")
+                                    .addArgument(key)
+                                    .workingDirectory(FileUtil.toFile(dobj.getPrimaryFile()));
                             ExecutionDescriptor descriptor = new ExecutionDescriptor().
                                     frontWindow(true).
                                     showProgress(true).
@@ -74,7 +72,6 @@ public class GulpTaskChildNodeFactory extends ChildFactory<String> {
                                     descriptor,
                                     key);
                             service.run();
-
                         }
                     }};
                 }
