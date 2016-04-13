@@ -17,6 +17,7 @@ import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -60,7 +61,9 @@ public class GulpTaskChildNodeFactory extends ChildFactory<String> {
                     return new Action[]{new AbstractAction("Run") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            ExternalProcessBuilder processBuilder = new ExternalProcessBuilder("gulp.cmd")
+                            String gulpCmd = Utilities.isWindows() ? "gulp.cmd" : "gulp";
+                            
+                            ExternalProcessBuilder processBuilder = new ExternalProcessBuilder(gulpCmd)
                                     .addArgument(key)
                                     .workingDirectory(FileUtil.toFile(dobj.getPrimaryFile()));
                             ExecutionDescriptor descriptor = new ExecutionDescriptor().
