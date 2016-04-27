@@ -44,16 +44,23 @@ public class GruntTasksChildNodeFactory extends ChildFactory<String> {
 //
 //        Future<Integer> run = service.run();
         Runtime rt = Runtime.getRuntime();
-        String[] commands = {gruntCmd, "-help"};
+        String[] commands = {gruntCmd, "--help"};
         Process proc;
+        String s;
+
         try {
             proc = rt.exec(commands);
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 
             BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
             
-            JOptionPane.showMessageDialog(null, stdInput.lines());
-
+            list.add(stdInput.readLine());
+            
+            while ((s = stdInput.readLine()) != null) {
+//                if (s.contains("Available tasks")) {
+                    list.add(s);
+//                }
+            }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
