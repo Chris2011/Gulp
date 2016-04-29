@@ -9,3 +9,6 @@
     <li>Read npm scripts and display targets.</li>
     <li>Right-click and choose Run.</li>
 </ul>
+
+<p>Screenshot:</p>
+<img src="screenshots/NbTasks.png" />
