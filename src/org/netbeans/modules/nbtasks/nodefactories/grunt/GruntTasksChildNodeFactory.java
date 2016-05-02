@@ -5,13 +5,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
-import javax.swing.JOptionPane;
+import java.util.prefs.BackingStoreException;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 
 /**
@@ -30,19 +31,9 @@ public class GruntTasksChildNodeFactory extends ChildFactory<String> {
         FileObject fo = dobj.getPrimaryFile().getFileObject("Gruntfile.js");
         String gruntCmd = Utilities.isWindows() ? "C:\\Users\\chrl\\AppData\\Roaming\\npm\\grunt.cmd" : "grunt";
 
-//        ExternalProcessBuilder processBuilder = new ExternalProcessBuilder(gruntCmd)
-//                                        .addArgument("-h")
-//                                        .workingDirectory(FileUtil.toFile(dobj.getPrimaryFile()));
-//                                ExecutionDescriptor descriptor = new ExecutionDescriptor().
-//                                        frontWindow(false).
-//                                        showProgress(true).                                        
-//                                        controllable(true);
-//                                ExecutionService service = ExecutionService.newService(
-//                                        processBuilder,
-//                                        descriptor,
-//                                        "Grunt help");
-//
-//        Future<Integer> run = service.run();
+        // Get netbeans specific preferences.        
+        System.out.println(NbPreferences.root().get("grunt.path", null));
+
         Runtime rt = Runtime.getRuntime();
         String[] commands = {gruntCmd, "--help"};
         Process proc;
