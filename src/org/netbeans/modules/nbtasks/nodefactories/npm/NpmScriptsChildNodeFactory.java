@@ -1,25 +1,18 @@
 package org.netbeans.modules.nbtasks.nodefactories.npm;
 
-import java.awt.event.ActionEvent;
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.util.List;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
-import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.netbeans.api.extexecution.ExecutionDescriptor;
-import org.netbeans.api.extexecution.ExecutionService;
-import org.netbeans.api.extexecution.ExternalProcessBuilder;
+import org.netbeans.modules.nbtasks.nodes.childnodes.BaseRunableChildNode;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Utilities;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -40,7 +33,7 @@ public class NpmScriptsChildNodeFactory extends ChildFactory<String> {
         try {
             JSONObject jsonObject = (JSONObject)jsonParser.parse(fo.asText());
             JSONObject npmScripts = (JSONObject)jsonObject.get("scripts");
-            
+
             if (npmScripts != null) {
                 for (Object npmScript : npmScripts.keySet()) {
                     list.add((String)npmScript);
@@ -54,41 +47,10 @@ public class NpmScriptsChildNodeFactory extends ChildFactory<String> {
     }
 
     @Override
-    protected Node createNodeForKey(final String key) {
-        BeanNode node = null;
-        try {
-            node = new BeanNode(key) {
-                @Override
-                public Action[] getActions(boolean context) {
-                    return new Action[] {
-                        new AbstractAction("Run") {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                String npmCmd = Utilities.isWindows() ? "C:\\Program Files\\nodejs\\npm.cmd" : "npm";
+    protected Node createNodeForKey(final String nodeName) {
+        BaseRunableChildNode node = new BaseRunableChildNode(dobj.getPrimaryFile(), nodeName, "org/netbeans/modules/javascript/nodejs/nodejs", "npm.path", "npm");
 
-                                ExternalProcessBuilder processBuilder = new ExternalProcessBuilder(npmCmd)
-                                        .addArgument(key)
-                                        .workingDirectory(FileUtil.toFile(dobj.getPrimaryFile()));
-                                ExecutionDescriptor descriptor = new ExecutionDescriptor().
-                                        frontWindow(true).
-                                        showProgress(true).
-                                        controllable(true);
-                                ExecutionService service = ExecutionService.newService(
-                                        processBuilder,
-                                        descriptor,
-                                        key);
-
-                                service.run();
-                            }
-                        }
-                    };
-                }
-            };
-
-            node.setDisplayName(key);
-        } catch (IntrospectionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        node.setDisplayName(nodeName);
 
         return node;
     }

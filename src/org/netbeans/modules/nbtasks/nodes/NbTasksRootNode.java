@@ -11,12 +11,12 @@ import org.openide.nodes.Children;
  * @author chrl
  */
 public class NbTasksRootNode extends AbstractNode {
-
     @StaticResource
     private static final String IMAGE = "org/netbeans/modules/nbtasks/resources/nodejs.png";
 
     public NbTasksRootNode(Project project) {
         super(Children.create(new NbTasksRootChildFactory(project), true));
+
         setDisplayName("Tasks & Scripts");
         setIconBaseWithExtension(IMAGE);
     }
